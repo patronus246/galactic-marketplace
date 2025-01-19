@@ -1,5 +1,6 @@
 package org.example.galacticmarketplace.domain;
 
+
 import lombok.Builder;
 import lombok.Value;
 
