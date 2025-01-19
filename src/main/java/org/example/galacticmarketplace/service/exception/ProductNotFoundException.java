@@ -1,4 +1,4 @@
-package org.example.galacticmarketplace.exception;
+package org.example.galacticmarketplace.service.exception;
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package org.example.galacticmarketplace.service;
 
 import org.example.galacticmarketplace.domain.Product;
-import org.example.galacticmarketplace.exception.ProductNotFoundException;
+import org.example.galacticmarketplace.service.exception.ProductNotFoundException;
 import org.example.galacticmarketplace.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,8 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Product Service Tests")
@@ -96,6 +97,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @Order(6)
     void testDeleteProduct() {
         productService.createProduct(product);
         productService.deleteProduct(product.getId());
@@ -103,9 +105,10 @@ class ProductServiceTest {
     }
 
     @Test
+    @Order(7)
     void testDeleteProductNotFound() {
-        UUID nonExistentId = UUID.randomUUID();
-        assertDoesNotThrow(() -> productService.deleteProduct(nonExistentId));
+        assertThrows(ProductNotFoundException.class, () ->
+                productService.deleteProduct(UUID.randomUUID()));
     }
 
     @ParameterizedTest

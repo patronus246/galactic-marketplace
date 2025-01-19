@@ -2,7 +2,7 @@ package org.example.galacticmarketplace.service.impl;
 
 import org.example.galacticmarketplace.domain.Product;
 import org.example.galacticmarketplace.service.ProductService;
-import org.example.galacticmarketplace.exception.ProductNotFoundException;
+import org.example.galacticmarketplace.service.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -57,16 +57,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(UUID productId) {
-        Optional<Product> productOptional = products.stream()
-                .filter(product -> product.getId().equals(productId))
-                .findFirst();
-
-        if (productOptional.isPresent()) {
-            products.remove(productOptional.get());
-            log.info("Product with id {} deleted successfully", productId);
-        } else {
-            log.info("Product with id {} not found, no action taken", productId);
-        }
+        Product product = getProductById(productId);
+        products.remove(product);
+        log.info("Product with id {} deleted successfully", productId);
     }
 
     private List<Product> buildAllProductMock() {
@@ -74,43 +67,43 @@ public class ProductServiceImpl implements ProductService {
                 Product.builder()
                         .id(UUID.randomUUID())
                         .categoryID(UUID.randomUUID().toString())
-                        .name("Galaxy Glow Notebook")
-                        .description("A notebook that illuminates your ideas like stars in the galaxy.")
-                        .price(9.49)
+                        .name("Comet Streak Pen")
+                        .description("A pen with a cosmic touch, tracing your thoughts like a comet streak.")
+                        .price(7.99)
                         .build(),
 
                 Product.builder()
                         .id(UUID.randomUUID())
                         .categoryID(UUID.randomUUID().toString())
-                        .name("Lunar Crystal Lamp")
-                        .description("A mesmerizing lamp that shines like the glow of the moon.")
-                        .price(34.99)
+                        .name("Asteroid Rock Candy")
+                        .description("Delicious treats made from asteroid-like rock candy.")
+                        .price(12.99)
                         .build(),
 
                 Product.builder()
                         .id(UUID.randomUUID())
                         .categoryID(UUID.randomUUID().toString())
-                        .name("Nebula Wireless Charger")
-                        .description("Charge your devices with the elegance of a nebula's swirling colors.")
-                        .price(19.99)
+                        .name("Satellite Earphones")
+                        .description("Listen to music like you’re orbiting the cosmos with these satellite-inspired earphones.")
+                        .price(29.99)
                         .build(),
 
                 Product.builder()
                         .id(UUID.randomUUID())
                         .categoryID(UUID.randomUUID().toString())
-                        .name("Aurora Scented Candle")
-                        .description("Fill your room with the magical aroma of the northern lights.")
-                        .price(11.49)
+                        .name("Meteor Bath Bomb")
+                        .description("Experience a meteor shower in your bath.")
+                        .price(8.99)
                         .build(),
 
                 Product.builder()
                         .id(UUID.randomUUID())
                         .categoryID(UUID.randomUUID().toString())
-                        .name("Starfall Mug")
-                        .description("A mug designed to bring the beauty of a shooting star to your coffee break.")
-                        .price(14.99)
+                        .name("Dark Matter Coffee")
+                        .description("Bold and intense coffee brewed with the mystery of dark matter.")
+                        .price(15.99)
                         .build()
+
         );
     }
-
 }

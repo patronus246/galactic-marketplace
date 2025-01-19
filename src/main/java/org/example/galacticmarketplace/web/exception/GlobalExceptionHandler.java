@@ -1,7 +1,9 @@
 package org.example.galacticmarketplace.web.exception;
 
 
-import org.example.galacticmarketplace.exception.ProductNotFoundException;
+import org.example.galacticmarketplace.feature_toggle.exception.FeatureToggleNotEnabledException;
+import org.example.galacticmarketplace.service.exception.CatNotFoundException;
+import org.example.galacticmarketplace.service.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -42,5 +44,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errors.stream().map(err -> ParamsViolationDetails.builder().reason(err.getDefaultMessage()).fieldName(err.getField()).build()).toList();
         log.info("Input params validation failed");
         return ResponseEntity.status(BAD_REQUEST).body(getValidationErrorsProblemDetail(validationResponse));
+    }
+
+    @ExceptionHandler(CatNotFoundException.class)
+    ProblemDetail handleCatNotFound(CatNotFoundException ex) {
+        log.info("Cat Not Found exception raised");
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        problemDetail.setType(create("cat-not-found"));
+        problemDetail.setTitle("Cat Not Found");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(FeatureToggleNotEnabledException.class)
+    ProblemDetail handleProductNotFound(FeatureToggleNotEnabledException ex) {
+        log.info("Feature is not enabled");
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        problemDetail.setType(create("feature-disabled"));
+        problemDetail.setTitle("Feature Is Disabled");
+        return problemDetail;
     }
 }

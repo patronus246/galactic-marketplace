@@ -1,4 +1,4 @@
-package org.example.galacticmarketplace.mapper;
+package org.example.galacticmarketplace.service.mapper;
 
 import org.example.galacticmarketplace.domain.order.OrderEntry;
 import org.example.galacticmarketplace.dto.order.OrderEntryDto;
