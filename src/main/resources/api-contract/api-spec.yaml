@@ -1,0 +1,179 @@
+openapi: 3.0.1
+info:
+  title: Galactic Goods API
+  description: API for managing products in the Stellar Emporium of Galactic Wonders.
+  version: 1.0.0
+servers:
+  - url: /api/v1/items
+    description: Base URL for Galactic Goods API
+paths:
+  /:
+    post:
+      summary: Add a new item
+      description: Adds a fresh item to the galactic marketplace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '200':
+          description: Item successfully added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /{id}:
+    get:
+      summary: Fetch item by ID
+      description: Retrieves an item based on its unique ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID of the item
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+    put:
+      summary: Update an item by ID
+      description: Modifies an existing item in the marketplace.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID of the item to update
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+    delete:
+      summary: Remove an item by ID
+      description: Deletes an item by its unique ID from the marketplace.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: UUID of the item to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Item successfully deleted
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+components:
+  schemas:
+    ItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: "Lunar Light Pen"
+          description: "The name should evoke a cosmic or galactic theme."
+        categoryID:
+          type: string
+          format: uuid
+          example: "e2a12b9e-c421-42f4-b14c-b8a3a7e8f4e2"
+        description:
+          type: string
+          maxLength: 255
+          example: "A pen that glows like the surface of the moon."
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 9.49
+      required:
+        - name
+        - categoryID
+        - price
+
+    ValidationError:
+      type: object
+      properties:
+        invalidFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldViolation'
+
+    FieldViolation:
+      type: object
+      properties:
+        field:
+          type: string
+          example: "name"
+        message:
+          type: string
+          example: "Product name cannot be empty."
+
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "item-not-found"
+        title:
+          type: string
+          example: "Item Not Found"
+        status:
+          type: integer
+          format: int32
+          example: 404
+        detail:
+          type: string
+          example: "Item with id abc1234-xyz5678 not found."
